@@ -1,7 +1,7 @@
 package com.andersonmarques.youtubenotes.models;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.HashSet;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,7 +17,7 @@ public class UserDetailsImp implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.EMPTY_SET;
+        return new HashSet<>();
     }
 
     @Override

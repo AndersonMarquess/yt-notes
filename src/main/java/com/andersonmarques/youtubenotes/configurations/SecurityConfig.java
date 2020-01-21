@@ -1,5 +1,6 @@
 package com.andersonmarques.youtubenotes.configurations;
 
+import com.andersonmarques.youtubenotes.filters.AuthorizationFilter;
 import com.andersonmarques.youtubenotes.filters.LoginFilter;
 import com.andersonmarques.youtubenotes.services.JwtService;
 import com.andersonmarques.youtubenotes.services.UserService;
@@ -13,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -21,7 +23,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final static String[] PUBLIC_ENDPOINTS = { "/v1/account" };
+    private final static String[] PUBLIC_ENDPOINTS = { "/v1/users" };
     @Autowired
     private JwtService jwtService;
     @Autowired
@@ -40,8 +42,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .addFilterBefore(new LoginFilter(authenticationManager(), jwtService), BasicAuthenticationFilter.class);
+        .and()
+            .addFilterBefore(new LoginFilter(authenticationManager(), jwtService), BasicAuthenticationFilter.class)
+            .addFilterBefore(new AuthorizationFilter(jwtService), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
