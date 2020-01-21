@@ -1,11 +1,17 @@
 package com.andersonmarques.youtubenotes.models;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -21,9 +27,11 @@ public class Video {
     @NotEmpty(message = "field {0} required")
     @Size(min = 3, max = 200, message = "field {0} should be between {min} and {max} characters")
     private String author;
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(nullable = false)
     private User user;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "video")
+    private Set<Note> notes = new HashSet<>();
 
     public Video() {
     }
@@ -70,6 +78,26 @@ public class Video {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Set<Note> getNotes() {
+        return Collections.unmodifiableSet(notes);
+    }
+
+    public void setNotes(Set<Note> notes) {
+        this.notes = notes;
+    }
+
+    public void addNote(Note note) {
+        if (note.getDescription() == null || note.getSeconds() < 0) {
+            throw new IllegalArgumentException("Invalid note");
+        }
+        note.setVideo(this);
+        this.notes.add(note);
+    }
+
+    public void removeNote(Note note) {
+        this.notes.remove(note);
     }
 
     @Override
