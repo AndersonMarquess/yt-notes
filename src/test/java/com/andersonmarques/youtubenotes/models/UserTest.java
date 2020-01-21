@@ -6,6 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.andersonmarques.youtubenotes.builders.UserBuilder;
+import com.andersonmarques.youtubenotes.builders.VideoBuilder;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -14,6 +18,15 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest
 @ActiveProfiles("test")
 public class UserTest {
+
+    private UserBuilder userBuilder;
+    private VideoBuilder videoBuilder;
+
+    @BeforeEach()
+    public void setupObjects() {
+        this.userBuilder = new UserBuilder();
+        this.videoBuilder = new VideoBuilder();
+    }
 
     @Test
     public void createUser() {
@@ -34,14 +47,13 @@ public class UserTest {
 
     @Test
     public void encondeRawPassword() {
-        User user = new User();
-        user.setPassword("password");
+        User user = userBuilder.withPassword("password").build();
         assertTrue(BCrypt.checkpw("password", user.getPassword()));
     }
 
     @Test
     public void notEncodePasswordTwice() {
-        User user = new User(1, "null", "password");
+        User user = userBuilder.withPassword("password").build();
         String encodedPassword = user.getPassword();
         user.setPassword(encodedPassword);
         assertTrue(BCrypt.checkpw("password", user.getPassword()));
@@ -54,8 +66,57 @@ public class UserTest {
 
     @Test
     public void throwIllegalArgExcptionWhenSetEmptyValue() {
-        User user = new User();
-        assertThrows(IllegalArgumentException.class, () -> user.setUsername(""));
-        assertThrows(IllegalArgumentException.class, () -> user.setPassword(""));
+        assertThrows(IllegalArgumentException.class, () -> userBuilder.build().setUsername(""));
+        assertThrows(IllegalArgumentException.class, () -> userBuilder.build().setPassword(""));
+    }
+
+    @Test
+    public void addVideoInUser() {
+        User user = userBuilder.build();
+        Video video = videoBuilder.build();
+        user.addVideo(video);
+        assertTrue(user.getVideos().contains(video));
+    }
+
+    @Test
+    public void thorwExceptionWhenTryToAddEmptyVideoInUser() {
+        assertThrows(IllegalArgumentException.class, () -> userBuilder.build().addVideo(new Video()));
+    }
+
+    @Test
+    public void notAddSameVideoInUserTwice() {
+        Video video = videoBuilder.build();
+        User user = userBuilder.build();
+        user.addVideo(video);
+        user.addVideo(video);
+        assertEquals(1, user.getVideos().size());
+    }
+
+    @Test
+    public void removeVideoFromUser() {
+        Video video = videoBuilder.build();
+        User user = userBuilder.build();
+        user.addVideo(video);
+        user.removeVideo(video);
+        assertTrue(user.getVideos().isEmpty());
+    }
+
+    @Test
+    public void notRemoveUnsavedVideoFromUser() {
+        Video video = videoBuilder.build();
+        Video video2 = videoBuilder.withId(2).build();
+        User user = userBuilder.build();
+        user.addVideo(video);
+        user.removeVideo(video2);
+        assertEquals(1, user.getVideos().size());
+    }
+
+    @Test
+    public void thorwExceptionWhenTryToModifyUserVideosFromGetter() {
+        User user = userBuilder.build();
+        Video video = videoBuilder.build();
+        user.addVideo(video);
+        assertThrows(UnsupportedOperationException.class, () -> user.getVideos().remove(video));
+        assertTrue(user.getVideos().contains(video));
     }
 }
