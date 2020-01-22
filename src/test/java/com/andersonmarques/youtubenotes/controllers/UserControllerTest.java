@@ -40,9 +40,18 @@ public class UserControllerTest {
         ResponseEntity<String> response = userControllerUtil.postUser(user);
         User userCreated = userControllerUtil.extractUserFromResponse(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals("/v1/users/1", response.getHeaders().getFirst("Location"));
+        assertEquals("/v1/users/" + userCreated.getId(), response.getHeaders().getFirst("Location"));
         assertNotNull(userCreated);
-        assertEquals(1, userCreated.getId());
+    }
+
+    @Test
+    public void notAllowCreateUserWithAlreadySavedUsername() {
+        User user = userBuilder.withId(1).withUsername("unique").build();
+        User user2 = userBuilder.withId(2).withUsername("unique").build();
+        ResponseEntity<String> response = userControllerUtil.postUser(user);
+        ResponseEntity<String> invalidResponse = userControllerUtil.postUser(user2);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, invalidResponse.getStatusCode());
     }
 
     @Test
@@ -69,10 +78,16 @@ public class UserControllerTest {
 
     @Test
     public void receiveJwtTokenAfterLogin() {
-        userControllerUtil.getDefaultRegistredUser();
-        ResponseEntity<String> response = userControllerUtil.authenticate("username", "password");
+        User user = userControllerUtil.getDefaultRegistredUser();
+        ResponseEntity<String> response = userControllerUtil.authenticate(user.getUsername(), "password");
         String token = response.getHeaders().getFirst("Authorization");
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(token);
+    }
+
+    @Test
+    public void notAllowLoginWithInvalidUser() {
+        ResponseEntity<String> response = userControllerUtil.authenticate("invalid", "password");
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
 }
