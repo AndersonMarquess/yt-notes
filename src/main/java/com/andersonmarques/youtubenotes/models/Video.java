@@ -6,8 +6,6 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -19,8 +17,8 @@ import javax.validation.constraints.Size;
 public class Video {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @NotEmpty(message = "field {0} required")
+    private String id;
     @NotEmpty(message = "field {0} required")
     @Size(min = 3, max = 200, message = "field {0} should be between {min} and {max} characters")
     private String title;
@@ -36,17 +34,20 @@ public class Video {
     public Video() {
     }
 
-    public Video(int id, String title, String author) {
-        this.id = id;
+    public Video(String id, String title, String author) {
+        setId(id);
         setTitle(title);
         setAuthor(author);
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
+        if (id.trim().isEmpty()) {
+            throw new IllegalArgumentException("Invalid id");
+        }
         this.id = id;
     }
 
@@ -55,7 +56,7 @@ public class Video {
     }
 
     public void setTitle(String title) {
-        if (title.isEmpty()) {
+        if (title.trim().isEmpty()) {
             throw new IllegalArgumentException("Invalid title");
         }
         this.title = title;
@@ -66,7 +67,7 @@ public class Video {
     }
 
     public void setAuthor(String author) {
-        if (author.isEmpty()) {
+        if (author.trim().isEmpty()) {
             throw new IllegalArgumentException("Invalid author");
         }
         this.author = author;
@@ -104,7 +105,7 @@ public class Video {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + id;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
         return result;
     }
 
@@ -117,7 +118,10 @@ public class Video {
         if (getClass() != obj.getClass())
             return false;
         Video other = (Video) obj;
-        if (id != other.id)
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
             return false;
         return true;
     }

@@ -36,21 +36,22 @@ public class VideoTest {
     @Test
     public void verifyGettersAndSetters() {
         Video video = new Video();
-        video.setId(1);
+        video.setId("1");
         video.setTitle("title");
         video.setAuthor("author");
-        assertEquals(1, video.getId());
+        assertEquals("1", video.getId());
         assertEquals("title", video.getTitle());
         assertEquals("author", video.getAuthor());
     }
 
     @Test
     public void throwIllegalArgExcptionWhenSetEmptyValueInConstructor() {
-        assertThrows(IllegalArgumentException.class, () -> new Video(0, "", ""));
+        assertThrows(IllegalArgumentException.class, () -> new Video("", "", ""));
     }
 
     @Test
     public void throwIllegalArgExcptionWhenSetEmptyValue() {
+        assertThrows(IllegalArgumentException.class, () -> new Video().setId(""));
         assertThrows(IllegalArgumentException.class, () -> new Video().setAuthor(""));
         assertThrows(IllegalArgumentException.class, () -> new Video().setTitle(""));
     }
