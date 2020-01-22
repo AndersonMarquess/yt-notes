@@ -20,12 +20,11 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     @NotEmpty(message = "field {0} required")
     @Size(min = 3, max = 50, message = "field {0} should be between {min} and {max} characters")
     private String username;
     @NotEmpty(message = "field {0} required")
-    @Size(min = 3, max = 50, message = "field {0} should be between {min} and {max} characters")
     private String password;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<Video> videos = new HashSet<>();
@@ -33,14 +32,14 @@ public class User {
     public User() {
     }
 
-    public User(int id, String username, String password) {
+    public User(Integer id, String username, String password) {
         this.id = id;
         setUsername(username);
         setPassword(password);
     }
 
     public void setPassword(String password) {
-        if (password.isEmpty()) {
+        if (password.trim().isEmpty() || password.length() < 3) {
             throw new IllegalArgumentException("Invalid password");
         }
         this.password = encodePassword(password);
@@ -60,11 +59,11 @@ public class User {
         return password.startsWith(bCryptPrefix) && password.length() == bCryptLength;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
