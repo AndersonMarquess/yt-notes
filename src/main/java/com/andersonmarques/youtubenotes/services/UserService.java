@@ -7,6 +7,7 @@ import com.andersonmarques.youtubenotes.models.UserDetailsImp;
 import com.andersonmarques.youtubenotes.repositories.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,10 +26,19 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return new UserDetailsImp(findByUsername(username));
+    }
+
+    private User findByUsername(String username) {
         Optional<User> user = userRepository.findByUsername(username);
         if (!user.isPresent()) {
             throw new UsernameNotFoundException("Invalid user");
         }
-        return new UserDetailsImp(user.get());
+        return user.get();
+    }
+
+    public User getAuthenticatedUser() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return findByUsername(username);
     }
 }

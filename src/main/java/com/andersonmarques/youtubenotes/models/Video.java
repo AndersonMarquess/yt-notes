@@ -13,6 +13,8 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Video {
 
@@ -73,6 +75,7 @@ public class Video {
         this.author = author;
     }
 
+    @JsonIgnore
     public User getUser() {
         return user;
     }
