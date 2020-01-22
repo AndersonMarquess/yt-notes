@@ -5,9 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.UUID;
 
-import com.andersonmarques.youtubenotes.Utils.UserControllerUtil;
 import com.andersonmarques.youtubenotes.builders.UserBuilder;
 import com.andersonmarques.youtubenotes.models.User;
+import com.andersonmarques.youtubenotes.utils.UserControllerUtil;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

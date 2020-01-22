@@ -1,4 +1,4 @@
-package com.andersonmarques.youtubenotes.Utils;
+package com.andersonmarques.youtubenotes.utils;
 
 import com.andersonmarques.youtubenotes.builders.UserBuilder;
 import com.andersonmarques.youtubenotes.models.AccountCredentials;
@@ -43,5 +43,10 @@ public class UserControllerUtil {
         credentials.setUsername(username);
         credentials.setPassword(password);
         return client.postForEntity("/login", new HttpEntity<>(credentials), String.class);
+    }
+
+    public String getJwtTokenForCredentials(String username, String password) {
+        ResponseEntity<String> response = authenticate(username, password);
+        return response.getHeaders().getFirst("Authorization");
     }
 }
