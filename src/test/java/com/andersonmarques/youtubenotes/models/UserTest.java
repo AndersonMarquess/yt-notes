@@ -104,7 +104,7 @@ public class UserTest {
     @Test
     public void notRemoveUnsavedVideoFromUser() {
         Video video = videoBuilder.build();
-        Video video2 = videoBuilder.withId("2").build();
+        Video video2 = videoBuilder.withId(2).build();
         User user = userBuilder.build();
         user.addVideo(video);
         user.removeVideo(video2);

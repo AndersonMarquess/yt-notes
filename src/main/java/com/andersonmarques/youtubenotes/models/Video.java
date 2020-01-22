@@ -6,6 +6,8 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -19,8 +21,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Video {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     @NotEmpty(message = "field {0} required")
-    private String id;
+    private String videoUrl;
     @NotEmpty(message = "field {0} required")
     @Size(min = 3, max = 200, message = "field {0} should be between {min} and {max} characters")
     private String title;
@@ -36,21 +40,33 @@ public class Video {
     public Video() {
     }
 
-    public Video(String id, String title, String author) {
-        setId(id);
+    public Video(Integer id, String videoUrl, String title, String author) {
+        this.id = id;
+        setVideoUrl(videoUrl);
         setTitle(title);
         setAuthor(author);
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
-        if (id.trim().isEmpty()) {
+    public void setId(Integer id) {
+        if (id == null) {
             throw new IllegalArgumentException("Invalid id");
         }
         this.id = id;
+    }
+
+    public String getVideoUrl() {
+        return videoUrl;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        if (videoUrl.trim().isEmpty()) {
+            throw new IllegalArgumentException("Invalid video url");
+        }
+        this.videoUrl = videoUrl;
     }
 
     public String getTitle() {

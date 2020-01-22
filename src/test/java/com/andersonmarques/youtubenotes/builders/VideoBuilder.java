@@ -1,17 +1,20 @@
 package com.andersonmarques.youtubenotes.builders;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.andersonmarques.youtubenotes.models.Video;
 
 public class VideoBuilder {
 
-    private String id;
+    private Integer id;
+    private String videoUrl;
     private String title;
     private String author;
 
     public VideoBuilder() {
-        this.id = UUID.randomUUID().toString();
+        this.id = LocalDateTime.now().getNano();
+        this.videoUrl = UUID.randomUUID().toString();
         this.title = UUID.randomUUID().toString();
         this.author = UUID.randomUUID().toString();
     }
@@ -26,12 +29,17 @@ public class VideoBuilder {
         return this;
     }
 
-    public VideoBuilder withId(String id) {
+    public VideoBuilder withId(Integer id) {
         this.id = id;
         return this;
     }
 
+    public VideoBuilder withVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
+        return this;
+    }
+
     public Video build() {
-        return new Video(id, title, author);
+        return new Video(id, videoUrl, title, author);
     }
 }
