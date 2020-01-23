@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,5 +34,11 @@ public class VideoController {
     public ResponseEntity<Video> findById(@PathVariable("id") Integer id) {
         Video video = videoService.findById(id);
         return ResponseEntity.ok(video);
+    }
+
+    @PutMapping(path = BASE_URI, consumes = APPLICATION_JSON)
+    public ResponseEntity<Video> update(@RequestBody @Valid Video video) {
+        Video videoUpdated = videoService.update(video);
+        return ResponseEntity.ok(videoUpdated);
     }
 }

@@ -28,11 +28,15 @@ public class VideoService {
     }
 
     public Video findById(Integer id) {
-        Optional<Video> video = videoRepository.findOne(buildVideoExampleWithId(id));
-        if (!video.isPresent()) {
+        if (id == null) {
             throw new IllegalArgumentException("Invalid video id");
+        } else {
+            Optional<Video> video = videoRepository.findOne(buildVideoExampleWithId(id));
+            if (!video.isPresent()) {
+                throw new IllegalArgumentException("Invalid video id");
+            }
+            return video.get();
         }
-        return video.get();
     }
 
     private Example<Video> buildVideoExampleWithId(Integer id) {
@@ -40,5 +44,18 @@ public class VideoService {
         setOwner(videoExample);
         videoExample.setId(id);
         return Example.of(videoExample);
+    }
+
+    public Video update(Video video) {
+        if (isVideoOwner(video)) {
+            setOwner(video);
+            return videoRepository.save(video);
+        } else {
+            throw new IllegalArgumentException("Invalid video");
+        }
+    }
+
+    private boolean isVideoOwner(Video video) {
+        return findById(video.getId()).getUser().getId() == userService.getAuthenticatedUser().getId();
     }
 }
