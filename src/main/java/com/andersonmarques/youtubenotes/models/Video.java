@@ -24,7 +24,7 @@ public class Video {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @NotEmpty(message = "field {0} required")
-    private String videoUrl;
+    private String url;
     @NotEmpty(message = "field {0} required")
     @Size(min = 3, max = 200, message = "field {0} should be between {min} and {max} characters")
     private String title;
@@ -42,7 +42,7 @@ public class Video {
 
     public Video(Integer id, String videoUrl, String title, String author) {
         this.id = id;
-        setVideoUrl(videoUrl);
+        setUrl(videoUrl);
         setTitle(title);
         setAuthor(author);
     }
@@ -52,21 +52,18 @@ public class Video {
     }
 
     public void setId(Integer id) {
-        if (id == null) {
-            throw new IllegalArgumentException("Invalid id");
-        }
         this.id = id;
     }
 
-    public String getVideoUrl() {
-        return videoUrl;
+    public String getUrl() {
+        return url;
     }
 
-    public void setVideoUrl(String videoUrl) {
-        if (videoUrl.trim().isEmpty()) {
+    public void setUrl(String url) {
+        if (url.trim().isEmpty()) {
             throw new IllegalArgumentException("Invalid video url");
         }
-        this.videoUrl = videoUrl;
+        this.url = url;
     }
 
     public String getTitle() {

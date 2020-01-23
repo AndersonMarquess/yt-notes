@@ -42,11 +42,25 @@ public class VideoControllerTest {
     }
 
     @Test
-    public void notAllowCreateVideoWithoutId() {
-        Video video = new Video();
-        video.setAuthor("author");
-        video.setTitle("title");
+    public void notAllowCreateVideoWithoutUrl() {
+        Video video = new Video(0, "http://www.youtube.com", "author", "title");
         ResponseEntity<String> response = videoControllerUtil.postVideoWithDefaultUser(video);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+    }
+
+    @Test
+    public void getDetailsOfCreatedVideoById() {
+        ResponseEntity<String> response = videoControllerUtil.postVideoWithDefaultUser(videoBuilder.build());
+        Video videoCreated = videoControllerUtil.extractVideoFromResponse(response);
+        ResponseEntity<String> responseDetails = videoControllerUtil.findDetailsByIdWithDefaultUser(videoCreated.getId());
+        Video videoDetails = videoControllerUtil.extractVideoFromResponse(responseDetails);
+        assertNotNull(videoDetails);
+        assertEquals(videoCreated.getId(), videoDetails.getId());
+    }
+
+    @Test
+    public void returnErrorWhenTryToAccessVideoWithouValidId() {
+        ResponseEntity<String> response = videoControllerUtil.findDetailsByIdWithDefaultUser(54321);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 }

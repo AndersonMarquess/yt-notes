@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
 public class VideoControllerUtil {
@@ -42,5 +43,11 @@ public class VideoControllerUtil {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	public ResponseEntity<String> findDetailsByIdWithDefaultUser(Integer id) {
+		addDefaultJwtTokenToHeader();
+		String url = "/v1/videos/" + id;
+		return client.exchange(url, HttpMethod.GET, new HttpEntity<>(headers), String.class);
 	}
 }

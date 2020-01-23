@@ -8,6 +8,8 @@ import com.andersonmarques.youtubenotes.services.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,5 +27,11 @@ public class VideoController {
     public ResponseEntity<Video> create(@RequestBody @Valid Video video) {
         Video videoCreated = videoService.insert(video);
         return ResponseEntity.status(HttpStatus.CREATED).body(videoCreated);
+    }
+
+    @GetMapping(path = BASE_URI + "/{id}", produces = APPLICATION_JSON)
+    public ResponseEntity<Video> findById(@PathVariable("id") Integer id) {
+        Video video = videoService.findById(id);
+        return ResponseEntity.ok(video);
     }
 }

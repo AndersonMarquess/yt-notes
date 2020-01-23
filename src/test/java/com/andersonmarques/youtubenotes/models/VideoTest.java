@@ -51,8 +51,7 @@ public class VideoTest {
 
     @Test
     public void throwIllegalArgExcptionWhenSetEmptyValue() {
-        assertThrows(IllegalArgumentException.class, () -> new Video().setId(null));
-        assertThrows(IllegalArgumentException.class, () -> new Video().setVideoUrl(""));
+        assertThrows(IllegalArgumentException.class, () -> new Video().setUrl(""));
         assertThrows(IllegalArgumentException.class, () -> new Video().setAuthor(""));
         assertThrows(IllegalArgumentException.class, () -> new Video().setTitle(""));
     }
