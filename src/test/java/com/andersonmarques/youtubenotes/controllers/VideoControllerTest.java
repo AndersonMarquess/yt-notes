@@ -52,7 +52,8 @@ public class VideoControllerTest {
     public void getDetailsOfCreatedVideoById() {
         ResponseEntity<String> response = videoControllerUtil.postVideoWithDefaultUser(videoBuilder.build());
         Video videoCreated = videoControllerUtil.extractVideoFromResponse(response);
-        ResponseEntity<String> responseDetails = videoControllerUtil.findDetailsByIdWithDefaultUser(videoCreated.getId());
+        ResponseEntity<String> responseDetails = videoControllerUtil
+                .findDetailsByIdWithDefaultUser(videoCreated.getId());
         Video videoDetails = videoControllerUtil.extractVideoFromResponse(responseDetails);
         assertNotNull(videoDetails);
         assertEquals(videoCreated.getId(), videoDetails.getId());
@@ -62,5 +63,27 @@ public class VideoControllerTest {
     public void returnErrorWhenTryToAccessVideoWithouValidId() {
         ResponseEntity<String> response = videoControllerUtil.findDetailsByIdWithDefaultUser(54321);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    public void updateVideoDetails() {
+        ResponseEntity<String> response = videoControllerUtil.postVideoWithDefaultUser(videoBuilder.build());
+        Video video = videoControllerUtil.extractVideoFromResponse(response);
+        assertNotNull(video);
+        video.setUrl("http://www.youtube.com/atualizado");
+        ResponseEntity<String> responseUpdate = videoControllerUtil.updateVideoWIthDefaultUser(video);
+        assertEquals(HttpStatus.OK, responseUpdate.getStatusCode());
+        Video videoUpdated = videoControllerUtil.extractVideoFromResponse(responseUpdate);
+        assertEquals("http://www.youtube.com/atualizado", videoUpdated.getUrl());
+    }
+
+    @Test
+    public void notAllowUpdateVideoWithoutId() {
+        ResponseEntity<String> response = videoControllerUtil.postVideoWithDefaultUser(videoBuilder.build());
+        Video video = videoControllerUtil.extractVideoFromResponse(response);
+        assertNotNull(video);
+        video.setId(null);
+        ResponseEntity<String> responseUpdate = videoControllerUtil.updateVideoWIthDefaultUser(video);
+        assertEquals(HttpStatus.BAD_REQUEST, responseUpdate.getStatusCode());
     }
 }

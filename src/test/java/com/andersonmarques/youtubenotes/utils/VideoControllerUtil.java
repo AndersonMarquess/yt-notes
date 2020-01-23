@@ -26,7 +26,11 @@ public class VideoControllerUtil {
 
 	public ResponseEntity<String> postVideoWithDefaultUser(Video video) {
 		addDefaultJwtTokenToHeader();
-		return client.postForEntity("/v1/videos", new HttpEntity<>(video, headers), String.class);
+		return sendVideoWithMethod(video, HttpMethod.POST);
+	}
+
+	private ResponseEntity<String> sendVideoWithMethod(Video video, HttpMethod method) {
+		return client.exchange("/v1/videos", method, new HttpEntity<>(video, headers), String.class);
 	}
 
 	private void addDefaultJwtTokenToHeader() {
@@ -49,5 +53,10 @@ public class VideoControllerUtil {
 		addDefaultJwtTokenToHeader();
 		String url = "/v1/videos/" + id;
 		return client.exchange(url, HttpMethod.GET, new HttpEntity<>(headers), String.class);
+	}
+
+	public ResponseEntity<String> updateVideoWIthDefaultUser(Video video) {
+		addDefaultJwtTokenToHeader();
+		return sendVideoWithMethod(video, HttpMethod.PUT);
 	}
 }
