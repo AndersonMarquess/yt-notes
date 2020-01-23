@@ -24,10 +24,10 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @NotEmpty(message = "field {0} required")
-    @Size(min = 3, max = 50, message = "field {0} should be between {min} and {max} characters")
+    @NotEmpty(message = "the username field is mandatory")
+    @Size(min = 3, max = 50, message = "the username field should be between {min} and {max} characters")
     private String username;
-    @NotEmpty(message = "field {0} required")
+    @NotEmpty(message = "the password field is mandatory")
     private String password;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<Video> videos = new HashSet<>();

@@ -1,6 +1,9 @@
 <h2 align="center">
 	YouTube Notes
 	<br>
+	<a href="https://www.codefactor.io/repository/github/andersonmarquess/yt-notes">
+		<img src="https://www.codefactor.io/repository/github/andersonmarquess/yt-notes/badge" alt="CodeFactor" align="center"/>
+	</a>
 	<a href="https://img.shields.io/badge/progress-WIP-blue">
 		<img src="https://img.shields.io/badge/progress-WIP-blue" align="center">
 	</a>

@@ -19,11 +19,11 @@ public class Note {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Lob
-    @NotEmpty(message = "field {0} required")
-    @Size(min = 3, max = 500, message = "field {0} should be between {min} and {max} characters")
+    @NotEmpty(message = "the description field is mandatory")
+    @Size(min = 3, max = 500, message = "the description field should be between {min} and {max} characters")
     private String description;
-    @NotNull(message = "field {0} required")
-    @Positive(message = "field {0} must be positive")
+    @NotNull(message = "the seconds field is mandatory")
+    @Positive(message = "the seconds field must be greater than 1")
     private int seconds;
     @ManyToOne
     @JoinColumn(nullable = false)

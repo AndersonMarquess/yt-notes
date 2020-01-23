@@ -51,7 +51,7 @@ public class UserControllerTest {
         ResponseEntity<String> response = userControllerUtil.postUser(user);
         ResponseEntity<String> invalidResponse = userControllerUtil.postUser(user2);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, invalidResponse.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, invalidResponse.getStatusCode());
     }
 
     @Test

@@ -23,13 +23,13 @@ public class Video {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @NotEmpty(message = "field {0} required")
+    @NotEmpty(message = "the url field is mandatory")
     private String url;
-    @NotEmpty(message = "field {0} required")
-    @Size(min = 3, max = 200, message = "field {0} should be between {min} and {max} characters")
+    @NotEmpty(message = "the title field is mandatory")
+    @Size(min = 3, max = 200, message = "the title field should be between {min} and {max} characters")
     private String title;
-    @NotEmpty(message = "field {0} required")
-    @Size(min = 3, max = 200, message = "field {0} should be between {min} and {max} characters")
+    @NotEmpty(message = "the author field is mandatory")
+    @Size(min = 3, max = 200, message = "the author field should be between {min} and {max} characters")
     private String author;
     @ManyToOne
     @JoinColumn(nullable = false)
