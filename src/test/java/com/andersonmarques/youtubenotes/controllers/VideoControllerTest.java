@@ -86,4 +86,18 @@ public class VideoControllerTest {
         ResponseEntity<String> responseUpdate = videoControllerUtil.updateVideoWIthDefaultUser(video);
         assertEquals(HttpStatus.BAD_REQUEST, responseUpdate.getStatusCode());
     }
+
+    @Test
+    public void deleteVideoById() {
+        ResponseEntity<String> response = videoControllerUtil.postVideoWithDefaultUser(videoBuilder.build());
+        Video video = videoControllerUtil.extractVideoFromResponse(response);
+        ResponseEntity<String> responseDelete = videoControllerUtil.deleteVideoByIdWithDefaultUser(video.getId());
+        assertEquals(HttpStatus.NO_CONTENT, responseDelete.getStatusCode());
+    }
+
+    @Test
+    public void notAllowDeleteVideoWithInvalidId() {
+        ResponseEntity<String> responseDelete = videoControllerUtil.deleteVideoByIdWithDefaultUser(54321);
+        assertEquals(HttpStatus.BAD_REQUEST, responseDelete.getStatusCode());
+    }
 }

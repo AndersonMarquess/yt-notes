@@ -24,22 +24,6 @@ public class VideoControllerUtil {
 		this.headers = new HttpHeaders();
 	}
 
-	public ResponseEntity<String> postVideoWithDefaultUser(Video video) {
-		addDefaultJwtTokenToHeader();
-		return sendVideoWithMethod(video, HttpMethod.POST);
-	}
-
-	private ResponseEntity<String> sendVideoWithMethod(Video video, HttpMethod method) {
-		return client.exchange("/v1/videos", method, new HttpEntity<>(video, headers), String.class);
-	}
-
-	private void addDefaultJwtTokenToHeader() {
-		User user = new UserBuilder().build();
-		userControllerUtil.postUser(user);
-		String token = userControllerUtil.getJwtTokenForCredentials(user.getUsername(), "password");
-		headers.add("Authorization", token);
-	}
-
 	public Video extractVideoFromResponse(ResponseEntity<String> response) {
 		try {
 			return new ObjectMapper().readValue(response.getBody(), Video.class);
@@ -49,14 +33,39 @@ public class VideoControllerUtil {
 		}
 	}
 
+	public ResponseEntity<String> postVideoWithDefaultUser(Video video) {
+		addDefaultJwtTokenToHeader();
+		return sendVideoWithMethod(video, HttpMethod.POST);
+	}
+
+	private void addDefaultJwtTokenToHeader() {
+		User user = new UserBuilder().build();
+		userControllerUtil.postUser(user);
+		String token = userControllerUtil.getJwtTokenForCredentials(user.getUsername(), "password");
+		headers.add("Authorization", token);
+	}
+
+	private ResponseEntity<String> sendVideoWithMethod(Video video, HttpMethod method) {
+		return client.exchange("/v1/videos", method, new HttpEntity<>(video, headers), String.class);
+	}
+
 	public ResponseEntity<String> findDetailsByIdWithDefaultUser(Integer id) {
 		addDefaultJwtTokenToHeader();
+		return sendIdWithMethod(id, HttpMethod.GET);
+	}
+
+	private ResponseEntity<String> sendIdWithMethod(Integer id, HttpMethod method) {
 		String url = "/v1/videos/" + id;
-		return client.exchange(url, HttpMethod.GET, new HttpEntity<>(headers), String.class);
+		return client.exchange(url, method, new HttpEntity<>(headers), String.class);
 	}
 
 	public ResponseEntity<String> updateVideoWIthDefaultUser(Video video) {
 		addDefaultJwtTokenToHeader();
 		return sendVideoWithMethod(video, HttpMethod.PUT);
+	}
+
+	public ResponseEntity<String> deleteVideoByIdWithDefaultUser(Integer id) {
+		addDefaultJwtTokenToHeader();
+		return sendIdWithMethod(id, HttpMethod.DELETE);
 	}
 }
