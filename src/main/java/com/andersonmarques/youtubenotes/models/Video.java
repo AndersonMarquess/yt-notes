@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,6 +17,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Video {
@@ -34,7 +36,8 @@ public class Video {
     @ManyToOne
     @JoinColumn(nullable = false)
     private User user;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "video")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "video", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private Set<Note> notes = new HashSet<>();
 
     public Video() {

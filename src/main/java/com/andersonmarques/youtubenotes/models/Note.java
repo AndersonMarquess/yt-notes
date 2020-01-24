@@ -12,12 +12,14 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class Note {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     @Lob
     @NotEmpty(message = "the description field is mandatory")
     @Size(min = 3, max = 500, message = "the description field should be between {min} and {max} characters")
@@ -27,22 +29,24 @@ public class Note {
     private int seconds;
     @ManyToOne
     @JoinColumn(nullable = false)
+    @NotNull(message = "the video field is mandatory")
+    @JsonBackReference
     private Video video;
 
     public Note() {
     }
 
-    public Note(int id, String description, int seconds) {
+    public Note(Integer id, String description, int seconds) {
         this.id = id;
         setDescription(description);
         setSeconds(seconds);
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

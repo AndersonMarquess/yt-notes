@@ -47,7 +47,7 @@ public class VideoService {
     }
 
     public Video update(Video video) {
-        if (isVideoOwner(video.getId())) {
+        if (authenticatedUserIsOwnerOfVideoWithId(video.getId())) {
             setOwner(video);
             return videoRepository.save(video);
         } else {
@@ -55,12 +55,12 @@ public class VideoService {
         }
     }
 
-    private boolean isVideoOwner(Integer videoId) {
-        return findById(videoId).getUser().getId() == userService.getAuthenticatedUser().getId();
+    public boolean authenticatedUserIsOwnerOfVideoWithId(Integer id) {
+        return findById(id).getUser().getId() == userService.getAuthenticatedUser().getId();
     }
 
     public void DeleteById(Integer id) {
-        if (isVideoOwner(id)) {
+        if (authenticatedUserIsOwnerOfVideoWithId(id)) {
             videoRepository.deleteById(id);
         }
     }
