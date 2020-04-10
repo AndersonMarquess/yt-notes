@@ -29,7 +29,7 @@ public class ExceptionHandlerController {
 
     private List<String> extractMessageFromException(Exception exception) {
         if (exception instanceof DataIntegrityViolationException) {
-            return Arrays.asList("Data integrity violation - Invalid username");
+            return Arrays.asList("Data integrity violation - verify your payload and try again");
         } else if (exception instanceof MethodArgumentNotValidException) {
             MethodArgumentNotValidException ex = (MethodArgumentNotValidException) exception;
             return ex.getBindingResult().getFieldErrors().stream().map(err -> err.getDefaultMessage())

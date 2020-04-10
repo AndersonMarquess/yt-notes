@@ -1,5 +1,6 @@
 package com.andersonmarques.youtubenotes.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.andersonmarques.youtubenotes.models.Video;
@@ -64,4 +65,9 @@ public class VideoService {
             videoRepository.deleteById(id);
         }
     }
+
+	public List<Video> findAll() {
+        int userId = userService.getAuthenticatedUser().getId();
+		return videoRepository.findAllByUserId(userId);
+	}
 }

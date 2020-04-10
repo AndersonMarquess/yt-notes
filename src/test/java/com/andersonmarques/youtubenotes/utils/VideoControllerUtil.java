@@ -1,5 +1,7 @@
 package com.andersonmarques.youtubenotes.utils;
 
+import java.util.List;
+
 import com.andersonmarques.youtubenotes.builders.UserBuilder;
 import com.andersonmarques.youtubenotes.models.User;
 import com.andersonmarques.youtubenotes.models.Video;
@@ -7,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -67,5 +70,11 @@ public class VideoControllerUtil {
 	public ResponseEntity<String> deleteVideoByIdWithDefaultUser(Integer id) {
 		addDefaultJwtTokenToHeader();
 		return sendIdWithMethod(id, HttpMethod.DELETE);
+	}
+
+	public ResponseEntity<List<Video>> findAll() {
+		addDefaultJwtTokenToHeader();
+		return client.exchange("/v1/videos", HttpMethod.GET, new HttpEntity<>(headers),
+				new ParameterizedTypeReference<List<Video>>() {});
 	}
 }

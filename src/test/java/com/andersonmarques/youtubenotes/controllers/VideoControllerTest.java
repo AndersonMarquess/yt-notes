@@ -2,6 +2,9 @@ package com.andersonmarques.youtubenotes.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.List;
 
 import com.andersonmarques.youtubenotes.builders.VideoBuilder;
 import com.andersonmarques.youtubenotes.models.Video;
@@ -43,9 +46,17 @@ public class VideoControllerTest {
 
     @Test
     public void notAllowCreateVideoWithoutUrl() {
-        Video video = new Video(0, "http://www.youtube.com", "author", "title");
-        ResponseEntity<String> response = videoControllerUtil.postVideoWithDefaultUser(video);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertThrows(IllegalArgumentException.class, () -> new Video(0, "", "author", "title"));
+    }
+
+    @Test
+    public void findAllVideosWithSuccess() {
+        ResponseEntity<String> response = videoControllerUtil.postVideoWithDefaultUser(videoBuilder.build());
+        ResponseEntity<List<Video>> allVideos = videoControllerUtil.findAll();
+        assertEquals(HttpStatus.OK, allVideos.getStatusCode());
+        Video videoCreated = videoControllerUtil.extractVideoFromResponse(response);
+        assertNotNull(allVideos.getBody());
+        assertEquals(videoCreated, allVideos.getBody().stream().findFirst().get());
     }
 
     @Test

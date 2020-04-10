@@ -1,5 +1,7 @@
 package com.andersonmarques.youtubenotes.controllers;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import com.andersonmarques.youtubenotes.models.Video;
@@ -29,6 +31,11 @@ public class VideoController {
     public ResponseEntity<Video> create(@RequestBody @Valid Video video) {
         Video videoCreated = videoService.insert(video);
         return ResponseEntity.status(HttpStatus.CREATED).body(videoCreated);
+    }
+
+    @GetMapping(path = BASE_URI, produces = APPLICATION_JSON)
+    public ResponseEntity<List<Video>> findAll() {
+        return ResponseEntity.ok(videoService.findAll());
     }
 
     @GetMapping(path = BASE_URI + "/{id}", produces = APPLICATION_JSON)
